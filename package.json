@@ -1,0 +1,24 @@
+{
+  "name": "game-research-citation-collector",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/research_notes_service.ts",
+    "example": "node --experimental-strip-types src/collect_game_research.ts",
+    "test": "node --experimental-strip-types --test test/citation_collector.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.104.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=22.6"
+  },
+  "license": "MIT"
+}
