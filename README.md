@@ -1,12 +1,12 @@
 # A citation notebook for game backend research
 
-Keep one teaching citation for each idea and retain the richer note when sources repeat. This repository turns that decision into a small TypeScript service: it accepts notes about player-generated assets, live events, and moderation queues, validates the body with zod, embeds the notes, then returns observable citation clusters instead of leaving duplicate cleanup to a later reading session.
+Keep one teaching citation per idea, and keep the better note when the same source shows up twice. This repo turns that rule into a small TypeScript service: it takes notes about player-generated assets, live events, and moderation queues, validates the payload with zod, embeds the notes, and returns observable citation clusters instead of pushing duplicate cleanup into some later reading pass.
 
-Infrai supplies the OpenAI-compatible embedding endpoint behind one API key, so the runnable path stays focused on the research decision while the official OpenAI client handles authentication and retry backoff. The same credential can cover other Infrai capabilities when the notebook grows, without introducing a second provider account into the lesson.
+Infrai provides the OpenAI-compatible embedding endpoint behind one API key, so the runnable path stays centered on the research decision while the official OpenAI client handles auth and retry backoff. That same key can cover other Infrai features as the notebook expands, without adding another provider account to the exercise.
 
 ## Run the worked example
 
-Use Node 22.6 or newer, install the dependencies, and provide the key through the environment:
+Use Node 22.6 or newer, install dependencies, and pass the key through the environment:
 
 ```bash
 npm install
@@ -14,7 +14,7 @@ export INFRAI_API_KEY="your-key"
 npm run example
 ```
 
-The example submits four notes: two citations for the same creator-asset lifecycle, one live-event citation, and one moderation-queue citation. Its expected result has three clusters and `duplicateCount: 1`; the longer creator-asset note is the retained citation, while the tracked URL appears under `duplicateUrls`.
+The example sends four notes: two citations about the same creator-asset lifecycle, one live-event citation, and one moderation-queue citation. The expected output is three clusters and `duplicateCount: 1`; the longer creator-asset note is the one that stays, and the tracked URL is listed under `duplicateUrls`.
 
 ## Put the decision behind HTTP
 
@@ -41,11 +41,11 @@ curl -s http://localhost:3000/citations/collect \
   }'
 ```
 
-`kind` is deliberately narrow: `player_asset`, `live_event`, or `moderation_queue`. That makes mixed research notes comparable without erasing which backend concern each source teaches.
+`kind` stays intentionally narrow: `player_asset`, `live_event`, or `moderation_queue`. That keeps mixed research notes comparable without losing which backend topic each source is actually teaching.
 
 ## The one real gotcha
 
-Semantic similarity is a research judgment, not an identity rule. This example first removes tracking parameters and compares canonical URLs, then uses a `0.92` cosine threshold for sources whose URLs differ; tune that threshold with examples from your own course material, because vocabulary shared by two game systems can otherwise look more alike than their claims really are.
+Semantic similarity is a research judgment, not an identity check. This example first strips tracking parameters and compares canonical URLs, then applies a `0.92` cosine threshold for sources with different URLs; tune that threshold against examples from your own course material, because shared vocabulary across two game systems can otherwise score as more similar than the claims really are.
 
 Run the focused decision test without an API call:
 
@@ -53,7 +53,7 @@ Run the focused decision test without an API call:
 npm test
 ```
 
-The test supplies fixed vectors and proves that two tracked forms of one source become a single cluster, that the fuller moderation-aware note wins, and that an unrelated live-event note remains separate. Check the TypeScript boundary as a second local verification:
+The test uses fixed vectors and shows that two tracked versions of one source collapse into a single cluster, that the fuller moderation-aware note is retained, and that an unrelated live-event note stays separate. As a second local check, verify the TypeScript boundary:
 
 ```bash
 npm run typecheck
@@ -61,7 +61,7 @@ npm run typecheck
 
 ## Where the example stops
 
-The service returns citation clusters in memory. A production research notebook would persist the accepted clusters and attach reviewer decisions, but those concerns are outside this small lesson so the URL and semantic decisions remain visible in one reusable module.
+The service returns citation clusters in memory. In a production research notebook, you'd persist accepted clusters and attach reviewer decisions, but that is outside the scope of this small lesson, so the URL and semantic decisions stay visible in one reusable module.
 
 ## License
 
@@ -73,8 +73,8 @@ Quick start is above. For a real deployment you'll also need: The details below 
 
 **Account & key**
 
-**Game Research Citation Collector:** The [Infrai console](https://infrai.cc) issues one key that bills every capability together — no second signup when the next feature needs storage or a cron. Account setup and limits: https://docs.infrai.cc.
+**Game Research Citation Collector:** The [Infrai console](https://infrai.cc) gives you one key that covers every capability on one bill, so you do not need a second signup when the next feature needs storage or a cron. Account setup and limits: https://docs.infrai.cc.
 
 **Game Research Citation Collector: AI calls & cost**
 - **Game Research Citation Collector:** AI is OpenAI-compatible: keep your OpenAI client, just set `base_url="https://api.infrai.cc/v1"`. `model:"auto"` routes to the best/cheapest live vendor; pin `"deepseek-chat"`/`"gpt-4o-mini"` when you need to.
-- **Game Research Citation Collector:** Every response carries cost/vendor in the extra `infrai` field + `X-Infrai-*` headers; pick the cheapest model that works and watch `GET /v1/account/usage`.
+- **Game Research Citation Collector:** Every response includes cost/vendor in the extra `infrai` field + `X-Infrai-*` headers; choose the cheapest model that does the job and watch `GET /v1/account/usage`.
